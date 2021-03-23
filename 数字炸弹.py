@@ -19,10 +19,9 @@ def play_sound():
 
 class Boom:
     def __init__(self):
-        self.minNum = 0
-        self.maxNum = 100
-        self.get_num()
-
+        self.minding, self.maxding = self.get_num()
+        self.minNum = self.minding  # 初次选择范围，之后固定
+        self.maxNum = self.maxding
         self.num = random.randint(self.minNum, self.maxNum)  # 数值范围
 
         self.guess = 0
@@ -61,13 +60,14 @@ class Boom:
                     else:
                         break
                 break
+        return self.minNum, self.maxNum
 
     def mian(self):
 
         while True:
             self.event, self.values = self.window.read()
 
-            print(self.event, self.values)
+            # print(self.event, self.values)
 
             if self.event in ('退出', None):
                 break
@@ -105,10 +105,11 @@ class Boom:
                         self.window['-TEXT1-'].update('请输入正确范围：')
                         self.window['-TEXT2-'].update(f'{self.minNum}到{self.maxNum}')
             if self.event == '刷新':  # 刷新程序重新开始
-                # self.get_num()
+                # self.get_num()   #每次刷新选择范围
 
-                self.minNum = 0
-                self.maxNum = 100
+                self.minNum = self.minding  # 初次选择范围，之后固定
+                self.maxNum = self.maxding
+
                 self.num = random.randint(self.minNum, self.maxNum)
                 self.window['-TEXT1-'].update('请输数字：')
                 self.window['-TEXT2-'].update(f'  {self.minNum}-{self.maxNum}   ')
