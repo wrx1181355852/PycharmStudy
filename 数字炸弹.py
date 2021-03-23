@@ -13,11 +13,16 @@ from playsound import *
 from threading import Thread
 
 
+def play_sound():
+    playsound('boom.mp3')
+
 
 class Boom:
     def __init__(self):
         self.minNum = 0
         self.maxNum = 100
+        self.get_num()
+
         self.num = random.randint(self.minNum, self.maxNum)  # 数值范围
 
         self.guess = 0
@@ -36,6 +41,26 @@ class Boom:
                                 size=(250, 150))  # 设置窗口，置顶，居中显示，大小 250*150 标题为‘数字炸弹’
         self.i = 0
         self.mian()
+
+    def get_num(self):
+        while True:
+            try:
+                self.minNum = int(sg.popup_get_text(message='最小值:', keep_on_top=True, size=(17, 2)))
+            except TypeError:
+                sys.exit()
+            except ValueError:
+                sg.popup('请输最小值。')
+            else:
+                while True:
+                    try:
+                        self.maxNum = int(sg.popup_get_text(message='最大值:', keep_on_top=True, size=(17, 2)))
+                    except TypeError:
+                        sys.exit()
+                    except ValueError:
+                        sg.popup('请输最大值。')
+                    else:
+                        break
+                break
 
     def mian(self):
 
@@ -66,8 +91,8 @@ class Boom:
                     elif self.guess == self.num:  # 猜对了
                         self.window['-TEXT1-'].update('猜对啦！就是：')
                         self.window['-TEXT2-'].update(self.num)
-                        Thread(target=self.play_sound, daemon=True).start()
-                        Thread(target=self.gif_show(),daemon=True).start()
+                        Thread(target=play_sound, daemon=True).start()
+                        Thread(target=self.gif_show(), daemon=True).start()
                         # while True:    #显示炸弹GIF
                         # time.sleep(0.01)
                         # self.i+=1
@@ -80,16 +105,15 @@ class Boom:
                         self.window['-TEXT1-'].update('请输入正确范围：')
                         self.window['-TEXT2-'].update(f'{self.minNum}到{self.maxNum}')
             if self.event == '刷新':  # 刷新程序重新开始
-                self.num = random.randint(0, 101)
+                # self.get_num()
+
                 self.minNum = 0
                 self.maxNum = 100
+                self.num = random.randint(self.minNum, self.maxNum)
                 self.window['-TEXT1-'].update('请输数字：')
                 self.window['-TEXT2-'].update(f'  {self.minNum}-{self.maxNum}   ')
         self.window.close()
         sys.exit()
-
-    def play_sound(self):
-        playsound('boom.mp3')
 
     def gif_show(self):
         while True:  # 显示炸弹GIF
