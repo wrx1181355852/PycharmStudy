@@ -13,8 +13,10 @@ from playsound import *
 from threading import Thread
 
 
-def play_sound():
-    playsound('boom.mp3')
+def play_sound(file):
+    playsound(file)
+
+
 
 
 class Boom:
@@ -96,28 +98,31 @@ class Boom:
                 except ValueError:
                     self.window['-TEXT1-'].update('请输入正确范围：')
                     self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
+                    Thread(target=play_sound, args=('Pleseenterright.mp3',),daemon=True).start()
                 else:
 
                     if self.num > self.guess > self.minNum:  # 猜小了，更新低点
                         self.minNum = self.guess
-                        self.window['-TEXT1-'].update('猜错了！再来。')
+                        self.window['-TEXT1-'].update(f'{self.guess}太小了！')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
+                        Thread(target=play_sound, args=('min.mp3',), daemon=True).start()
                     elif self.num < self.guess < self.maxNum:  # 猜大了，更新顶点
                         self.maxNum = self.guess
-                        self.window['-TEXT1-'].update('猜错了！再来。')
+                        self.window['-TEXT1-'].update(f'{self.guess}太大了！')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
+                        Thread(target=play_sound, args=('max.mp3',), daemon=True).start()
                     elif self.guess == self.num:  # 猜对了
                         self.window['-TEXT1-'].update('猜对啦！就是：')
                         self.window['-TEXT2-'].update(self.num)
 
-                        Thread(target=play_sound, daemon=True).start()
+                        Thread(target=play_sound,args=('boom.mp3',), daemon=True).start()
                         Thread(target=self.gif_show(), daemon=True).start()
                         self.flush()
 
                     else:
                         self.window['-TEXT1-'].update('请输入正确范围：')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-
+                        Thread(target=play_sound, args=('Pleseenterright.mp3',), daemon=True).start()
             if event == '刷新':  # 刷新程序重新开始
                 self.flush()
 
