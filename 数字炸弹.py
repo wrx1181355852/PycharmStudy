@@ -17,8 +17,6 @@ def play_sound(file):
     playsound(file)
 
 
-
-
 class Boom:
     def __init__(self):
         self.state_menu = 0
@@ -51,6 +49,7 @@ class Boom:
         self.window = sg.Window('数字炸弹', self.layout, keep_on_top=True,
                                 element_justification='c',
                                 grab_anywhere=True,
+                                resizable=True,
                                 size=(300, 150))  # 设置窗口，置顶，居中显示，大小 250*150 标题为‘数字炸弹’
         self.i = 0
         self.mian()
@@ -59,6 +58,7 @@ class Boom:
         while True:
 
             try:
+                Thread(target=play_sound, args=('setmin.mp3',), daemon=True).start()
                 self.minNum = int(sg.popup_get_text(message='最小值:', keep_on_top=True, size=(17, 2)))
             except TypeError:
                 sys.exit()
@@ -67,6 +67,7 @@ class Boom:
             else:
                 while True:
                     try:
+                        Thread(target=play_sound, args=('setmax.mp3',), daemon=True).start()
                         self.maxNum = int(sg.popup_get_text(message='最大值:', keep_on_top=True, size=(17, 2)))
                     except TypeError:
                         sys.exit()
@@ -98,7 +99,7 @@ class Boom:
                 except ValueError:
                     self.window['-TEXT1-'].update('请输入正确范围：')
                     self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-                    Thread(target=play_sound, args=('Pleseenterright.mp3',),daemon=True).start()
+                    Thread(target=play_sound, args=('Pleseenterright.mp3',), daemon=True).start()
                 else:
 
                     if self.num > self.guess > self.minNum:  # 猜小了，更新低点
@@ -115,7 +116,7 @@ class Boom:
                         self.window['-TEXT1-'].update('猜对啦！就是：')
                         self.window['-TEXT2-'].update(self.num)
 
-                        Thread(target=play_sound,args=('boom.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('boom.mp3',), daemon=True).start()
                         Thread(target=self.gif_show(), daemon=True).start()
                         self.flush()
 
