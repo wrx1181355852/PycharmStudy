@@ -13,21 +13,22 @@ from playsound import *
 from threading import Thread
 
 
-def play_sound(file):
+def play_sound(file):  #播放声音
     playsound(file)
+
 
 
 class Boom:
     def __init__(self):
-        self.state_menu = 0
+        self.state_menu = 0  #菜单栏状态默认选择
 
         self.minding, self.maxding = self.get_num()
-        while True:
-            if self.maxNum - self.minNum < 2:
+        while True:         #数值范围不能为0
+            if self.maxding- self.minding < 2:
                 self.minding, self.maxding = self.get_num()
             else:
                 break
-        self.minNum = self.minding  # 初次选择范围，之后固定
+        self.minNum = self.minding  # 初次选择范围
         self.maxNum = self.maxding
         self.num = random.randint(self.minNum + 1, self.maxNum - 1)  # 数值范围
 
@@ -54,30 +55,30 @@ class Boom:
         self.i = 0
         self.mian()
 
-    def get_num(self):
+    def get_num(self): #初始化数字
         while True:
 
-            try:
+            try:  #设定最小值
                 Thread(target=play_sound, args=('setmin.mp3',), daemon=True).start()
-                self.minNum = int(sg.popup_get_text(message='最小值:', keep_on_top=True, size=(17, 2)))
+                minNum = int(sg.popup_get_text(message='最小值:', keep_on_top=True, size=(17, 2)))
             except TypeError:
                 sys.exit()
             except ValueError:
-                sg.popup('请输最小值。')
+                sg.popup('请输最小值。',keep_on_top=True)
             else:
                 while True:
                     try:
                         Thread(target=play_sound, args=('setmax.mp3',), daemon=True).start()
-                        self.maxNum = int(sg.popup_get_text(message='最大值:', keep_on_top=True, size=(17, 2)))
+                        maxNum = int(sg.popup_get_text(message='最大值:', keep_on_top=True, size=(17, 2)))
                     except TypeError:
                         sys.exit()
                     except ValueError:
-                        sg.popup('请输最大值。')
+                        sg.popup('请输最大值。',keep_on_top=True)
                     else:
                         break
                 break
 
-        return self.minNum, self.maxNum
+        return minNum, maxNum
 
     def mian(self):
 
@@ -156,7 +157,14 @@ class Boom:
         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
 
     def every_set(self):
-        self.get_num()  # 每次刷新选择范围
+        self.minding,self.maxding=self.get_num()  # 每次刷新选择范围
+        while True:         #数值范围不能为0
+            if self.maxding- self.minding < 2:
+                self.minding, self.maxding = self.get_num()
+            else:
+                break
+        self.minNum = self.minding  # 初次选择范围
+        self.maxNum = self.maxding
         self.num = random.randint(self.minNum + 1, self.maxNum - 1)
         self.window['-TEXT1-'].update('请输数字：')
         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
