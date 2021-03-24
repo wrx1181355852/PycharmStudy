@@ -13,18 +13,17 @@ from playsound import *
 from threading import Thread
 
 
-def play_sound(file):  #播放声音
+def play_sound(file):  # 播放声音
     playsound(file)
-
 
 
 class Boom:
     def __init__(self):
-        self.state_menu = 0  #菜单栏状态默认选择
+        self.state_menu = 0  # 菜单栏状态默认选择
 
         self.minding, self.maxding = self.get_num()
-        while True:         #数值范围不能为0
-            if self.maxding- self.minding < 2:
+        while True:  # 数值范围不能为0
+            if self.maxding - self.minding < 2:
                 self.minding, self.maxding = self.get_num()
             else:
                 break
@@ -33,7 +32,7 @@ class Boom:
         self.num = random.randint(self.minNum + 1, self.maxNum - 1)  # 数值范围
 
         self.guess = 0
-        self.gif = '爆炸.gif'  # 爆炸动图地址，可以替换
+        self.gif = '../images/爆炸.gif'  # 爆炸动图地址，可以替换
         self.menumsg = [
             ['模式', ['开局设置范围', '每局设置范围']]
         ]
@@ -55,25 +54,25 @@ class Boom:
         self.i = 0
         self.mian()
 
-    def get_num(self): #初始化数字
+    def get_num(self):  # 初始化数字
         while True:
 
-            try:  #设定最小值
-                Thread(target=play_sound, args=('setmin.mp3',), daemon=True).start()
+            try:  # 设定最小值
+                Thread(target=play_sound, args=('../sound/setmin.mp3',), daemon=True).start()
                 minNum = int(sg.popup_get_text(message='最小值:', keep_on_top=True, size=(17, 2)))
             except TypeError:
                 sys.exit()
             except ValueError:
-                sg.popup('请输最小值。',keep_on_top=True)
+                sg.popup('请输最小值。', keep_on_top=True)
             else:
                 while True:
                     try:
-                        Thread(target=play_sound, args=('setmax.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('../sound/setmax.mp3',), daemon=True).start()
                         maxNum = int(sg.popup_get_text(message='最大值:', keep_on_top=True, size=(17, 2)))
                     except TypeError:
                         sys.exit()
                     except ValueError:
-                        sg.popup('请输最大值。',keep_on_top=True)
+                        sg.popup('请输最大值。', keep_on_top=True)
                     else:
                         break
                 break
@@ -100,31 +99,31 @@ class Boom:
                 except ValueError:
                     self.window['-TEXT1-'].update('请输入正确范围：')
                     self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-                    Thread(target=play_sound, args=('Pleseenterright.mp3',), daemon=True).start()
+                    Thread(target=play_sound, args=('../sound/Pleseenterright.mp3',), daemon=True).start()
                 else:
 
                     if self.num > self.guess > self.minNum:  # 猜小了，更新低点
                         self.minNum = self.guess
                         self.window['-TEXT1-'].update(f'{self.guess}太小了！')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-                        Thread(target=play_sound, args=('min.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('../sound/min.mp3',), daemon=True).start()
                     elif self.num < self.guess < self.maxNum:  # 猜大了，更新顶点
                         self.maxNum = self.guess
                         self.window['-TEXT1-'].update(f'{self.guess}太大了！')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-                        Thread(target=play_sound, args=('max.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('../sound/max.mp3',), daemon=True).start()
                     elif self.guess == self.num:  # 猜对了
                         self.window['-TEXT1-'].update('猜对啦！就是：')
                         self.window['-TEXT2-'].update(self.num)
 
-                        Thread(target=play_sound, args=('boom.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('../sound/boom.mp3',), daemon=True).start()
                         Thread(target=self.gif_show(), daemon=True).start()
                         self.flush()
 
                     else:
                         self.window['-TEXT1-'].update('请输入正确范围：')
                         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
-                        Thread(target=play_sound, args=('Pleseenterright.mp3',), daemon=True).start()
+                        Thread(target=play_sound, args=('../sound/Pleseenterright.mp3',), daemon=True).start()
             if event == '刷新':  # 刷新程序重新开始
                 self.flush()
 
@@ -157,9 +156,9 @@ class Boom:
         self.window['-TEXT2-'].update(f'{self.minNum}-{self.maxNum}不包含{self.minNum}和{self.maxNum}.')
 
     def every_set(self):
-        self.minding,self.maxding=self.get_num()  # 每次刷新选择范围
-        while True:         #数值范围不能为0
-            if self.maxding- self.minding < 2:
+        self.minding, self.maxding = self.get_num()  # 每次刷新选择范围
+        while True:  # 数值范围不能为0
+            if self.maxding - self.minding < 2:
                 self.minding, self.maxding = self.get_num()
             else:
                 break
