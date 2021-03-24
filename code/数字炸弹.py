@@ -6,8 +6,8 @@
 # @IDE名字:PyCharm
 
 import random
-import time
 import sys
+import time
 import PySimpleGUI as sg
 from playsound import *
 from threading import Thread
