@@ -74,9 +74,6 @@ class Boom:
                         break
                 break
 
-
-
-
         return self.minNum, self.maxNum
 
     def mian(self):
